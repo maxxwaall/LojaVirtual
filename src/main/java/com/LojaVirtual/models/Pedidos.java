@@ -24,8 +24,7 @@ public class Pedidos {
 	private Clientes cliente;
 	
 	
-	public Pedidos(long codigo, String endereco, Double valorTotal, Clientes cliente) {
-		this.codigo = codigo;
+	public Pedidos(String endereco, Double valorTotal, Clientes cliente) {
 		this.enderecoEntrega = endereco;
 		this.valorTotalPedido = valorTotal;
 		this.cliente = cliente;

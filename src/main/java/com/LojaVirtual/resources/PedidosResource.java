@@ -19,61 +19,76 @@ import com.LojaVirtual.repository.PedidoRepository;
 import com.LojaVirtual.repository.ProdutoRepository;
 import com.LojaVirtual.repository.ProdutosPedidoRepository;
 
+
+/* Autor: Fabiano Albino Ferreira
+ * 
+ * Data da criação: 30/07/2018
+ * 
+ * Descrição: Classe criada para receber e também retornar pedidos existentes no banco de dados.
+ * 
+ */
 @RestController
 @RequestMapping("/api/pedidos")
 public class PedidosResource {
-	
+
 	public PedidosResource() {
-	
+
 	}
-	
+
 	@Autowired
 	private ClienteRepository clientRep;
-	
+
 	@Autowired
 	private ProdutoRepository produtoRep;
-	
+
 	@Autowired
 	private PedidoRepository pedidoRep;
-	
+
 	@Autowired
 	private ProdutosPedidoRepository produtosPorPedidoRep;
-	
-	@GetMapping(produces="application/json")
+
+	//Método GET para retornar todos os pedidos cadastrados no banco de dados.
+	@GetMapping(produces = "application/json")
 	public @ResponseBody Iterable<Pedidos> getPedidos() {
 		Iterable<Pedidos> listaPedidos = pedidoRep.findAll();
 		return listaPedidos;
 	}
-	
+
+	/*Metodo POST para cadastrar os pedidos recebidos da API no banco de dados.
+	 * 
+	 * Example Body: {
+					    "codigoCliente":1,
+					    "enderecoEntrega": "Rua da Justiça",
+					    "codigoProdutos":["1","2"],
+					    "totalPedido": 60
+					 }
+	 * 
+	 */
 	@PostMapping()
 	public Pedidos inserirPedidos(@RequestBody @Valid AuxiliarPedidos auxPedidos) {
-		Pedidos pedidos = new Pedidos();
-		Clientes cliente  = clientRep.findByCodigo(auxPedidos.getCodigoCliente());
+		
+		Pedidos pedidos ;
+		
+		try {
+						
+			Clientes cliente = clientRep.findByCodigo(auxPedidos.getCodigoCliente());
+			
+			pedidos = new Pedidos(auxPedidos.getEnderecoEntrega(), auxPedidos.getTotalPedido(), cliente);
+			pedidos = pedidoRep.save(pedidos);
 
-		pedidos.setCliente(cliente);
-		pedidos.setEnderecoEntrega(auxPedidos.getEnderecoEntrega());
-		pedidos.setValorTotalPedido(auxPedidos.getTotalPedido());
-		
-		pedidos = pedidoRep.save(pedidos);
-		
-		for(String codigoProduto : auxPedidos.getCodigoProdutos()) {
-			ProdutosPedido produtosPorPedido = new ProdutosPedido();
+			for (String codigoProduto : auxPedidos.getCodigoProdutos()) {
+				
+				Produtos produto = produtoRep.findByCodigo(Long.parseLong(codigoProduto));
+				ProdutosPedido produtosPorPedido = new ProdutosPedido(pedidos, produto, "PEDIDO - PRODUTO (" + codigoProduto + ")");
+				produtosPorPedidoRep.save(produtosPorPedido);
+
+			}
 			
-			Produtos produto = produtoRep.findByCodigo(Long.parseLong(codigoProduto));
-			produtosPorPedido.setPedido(pedidos);
-			produtosPorPedido.setProduto(produto);
-			
-			produtosPorPedidoRep.save(produtosPorPedido);
-			
-			System.out.print(pedidos.getCodigo() + cliente.getCodigo() + produto.getCodigo() + produtosPorPedido.getCodigo() );
+		} catch (Exception ex) {
+			throw ex;
 		}
-		
-		
+
 		return pedidos;
 	}
-	
-	
-	
-	
 
 }

@@ -26,10 +26,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
+/*
+ * Autor: Fabiano Albino Ferreira.
+ * 
+ * Data da criação: 02/08/2018.
+ * 
+ * Descrição: Classe criada para testar os métodos GET e POST da Api
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-//@TestPropertySource(locations="classpath:test.properties")
-//@WebAppConfiguration
 public class LojaVirtualApplicationTests {
 	
 	 final String BASE_PATH = "http://localhost:8080/api/pedidos";
@@ -47,26 +52,22 @@ public class LojaVirtualApplicationTests {
     @Autowired
     private ProdutosPedidoRepository produtosPedidoRep;
      
-    //Definimos o restTemplate
     private RestTemplate restTemplate;
-     
-    //Definimos o JacksonMapper responsável por converter
-    //JSON para Objeto e vice versa
-    private ObjectMapper MAPPER = new ObjectMapper();
 	
-	
+	//Método a a ser executado antes dos testes.
     @Before
     public void setUp() throws Exception {
  
     	Clientes cliente = clienteRep.save(new Clientes("Diego"));
     	Produtos produto = produtoRep.save(new Produtos("Abacaxi"));   	
-    	Pedidos pedido = pedidoRep.save(new Pedidos(cliente.getCodigo(), "RUA", 2332213.00, cliente));
+    	Pedidos pedido = pedidoRep.save(new Pedidos("RUA", 2332213.00, cliente));
     	ProdutosPedido produtoPedido = produtosPedidoRep.save(new ProdutosPedido(pedido, produto, "PEDIDO - 1"));
     	
         //Inicializamos o objeto restTemplate
         restTemplate = new RestTemplate();
     }
     
+    //Método de teste criado para testar o método POST da Api.
 	@Test
     public void testPost() throws JsonProcessingException{
  
@@ -74,17 +75,19 @@ public class LojaVirtualApplicationTests {
 
 		AuxiliarPedidos auxiliar = new AuxiliarPedidos("RUA", 1, codigoProd, 12.00);
     	
-        //Fazemos um HTTP request do tipo POST passando o pedido como parâmetro
+        //HTTP request do tipo POST passando o pedido como parâmetro
         Pedidos pedidoRet = restTemplate.postForObject(BASE_PATH, auxiliar , Pedidos.class);
  
-        //Verificamos se o resultado da requisição é igual ao esperado
-        //Se sim significa que tudo correu bem
+        //Assert para verificar se o resultado foi o esperado
         Assert.assertEquals("RUA", pedidoRet.getEnderecoEntrega());
     }
 	
+	//Método de teste criado para testar o método GET da Api.
 	@Test
 	public void testGet() throws IOException{
 		String response = restTemplate.getForObject(BASE_PATH, String.class);
+		
+		//Assert para verificar se o resultado foi o esperado.
 		Assert.assertTrue(!response.isEmpty());
 	}
 
