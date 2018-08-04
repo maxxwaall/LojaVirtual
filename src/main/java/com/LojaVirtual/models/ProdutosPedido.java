@@ -31,7 +31,7 @@ public class ProdutosPedido {
 	}
 	
 	public ProdutosPedido() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public long getCodigo() {

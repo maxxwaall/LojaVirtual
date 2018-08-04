@@ -14,6 +14,16 @@ public class Clientes {
 	
 	private String nome;
 	
+	
+
+	public Clientes() {
+		
+	}
+	
+	public Clientes(String nome) {
+		this.nome = nome;
+	}
+	
 	public long getCodigo() {
 		return codigo;
 	}
@@ -30,12 +40,5 @@ public class Clientes {
 		this.nome = nome;
 	}
 
-	public Clientes() {
-		// TODO Auto-generated constructor stub
-	}
-	
-	public Clientes(String nome) {
-		this.nome = nome;
-	}
 
 }

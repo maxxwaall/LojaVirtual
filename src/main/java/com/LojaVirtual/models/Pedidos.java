@@ -23,7 +23,11 @@ public class Pedidos {
 	@JoinColumn(name="cliente_id")
 	private Clientes cliente;
 	
-	
+
+	public Pedidos() {
+		
+	}
+
 	public Pedidos(String endereco, Double valorTotal, Clientes cliente) {
 		this.enderecoEntrega = endereco;
 		this.valorTotalPedido = valorTotal;
@@ -65,11 +69,6 @@ public class Pedidos {
 
 	public void setEnderecoEntrega(String enderecoEntrega) {
 		this.enderecoEntrega = enderecoEntrega;
-	}
-
-
-	public Pedidos() {
-		
 	}
 
 }
