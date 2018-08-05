@@ -1,5 +1,9 @@
 package com.LojaVirtual.resources;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,21 +72,25 @@ public class PedidosResource {
 	public Pedidos inserirPedidos(@RequestBody @Valid AuxiliarPedidos auxPedidos) {
 		
 		Pedidos pedidos ;
-		
+		Iterable<ProdutosPedido> listProdutosPedido = new ArrayList<ProdutosPedido>();
+		Iterable<Produtos> listProdutosByCodigo = new ArrayList<Produtos>();
 		try {
 						
 			Clientes cliente = clientRep.findByCodigo(auxPedidos.getCodigoCliente());
 			
 			pedidos = new Pedidos(auxPedidos.getEnderecoEntrega(), auxPedidos.getTotalPedido(), cliente);
 			pedidos = pedidoRep.save(pedidos);
-
-			for (String codigoProduto : auxPedidos.getCodigoProdutos()) {
+			
+			listProdutosByCodigo = produtoRep.findByCodigoIn(auxPedidos.getCodigoProdutos());
+			
+			for (Produtos produto : listProdutosByCodigo) {
 				
-				Produtos produto = produtoRep.findByCodigo(Long.parseLong(codigoProduto));
-				ProdutosPedido produtosPorPedido = new ProdutosPedido(pedidos, produto, "PEDIDO - PRODUTO (" + codigoProduto + ")");
-				produtosPorPedidoRep.save(produtosPorPedido);
+				ProdutosPedido produtosPorPedido = new ProdutosPedido(pedidos, produto, "PEDIDO - PRODUTO (" + produto.getCodigo() + ")");
+				((ArrayList<ProdutosPedido>) listProdutosPedido).add(produtosPorPedido);
 
 			}
+			
+			produtosPorPedidoRep.save(listProdutosPedido);
 			
 		} catch (Exception ex) {
 			throw ex;

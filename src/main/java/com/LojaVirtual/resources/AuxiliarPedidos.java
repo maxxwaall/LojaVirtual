@@ -6,10 +6,10 @@ public class AuxiliarPedidos {
 
 	private String enderecoEntrega;
 	private long codigoCliente;
-	private List<String> codigoProdutos;
+	private List<Long> codigoProdutos;
 	private Double totalPedido;
 	
-	public AuxiliarPedidos(String enderecoEntrega, long codigoCliente, List<String> codigoProd, Double total) {
+	public AuxiliarPedidos(String enderecoEntrega, long codigoCliente, List<Long> codigoProd, Double total) {
 		this.enderecoEntrega = enderecoEntrega;
 		this.codigoCliente = codigoCliente;
 		this.codigoProdutos = codigoProd;
@@ -41,13 +41,13 @@ public class AuxiliarPedidos {
 
 
 
-	public List<String> getCodigoProdutos() {
+	public List<Long> getCodigoProdutos() {
 		return codigoProdutos;
 	}
 
 
 
-	public void setCodigoProdutos(List<String> codigoProdutos) {
+	public void setCodigoProdutos(List<Long> codigoProdutos) {
 		this.codigoProdutos = codigoProdutos;
 	}
 

@@ -1,6 +1,7 @@
 package com.LojaVirtual.LojaVirtual;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -71,7 +72,7 @@ public class LojaVirtualApplicationTests {
 	@Test
     public void testPost() throws JsonProcessingException{
  
-    	List<String> codigoProd = Arrays.asList("1");
+    	List<Long> codigoProd = new ArrayList<Long>(1);
 
 		AuxiliarPedidos auxiliar = new AuxiliarPedidos("RUA", 1, codigoProd, 12.00);
     	
