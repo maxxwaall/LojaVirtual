@@ -56,12 +56,14 @@ public class PedidosResource {
 	//Método GET para retornar todos os pedidos cadastrados no banco de dados.
 	@GetMapping(produces = "application/json")
 	public @ResponseBody List<AuxiliarPedidos> getPedidos() {
-		Iterable<Pedidos> listaPedidos = pedidoRep.findAll();
-		Iterable<ProdutosPedido> listaProdutosPorPedidoByIdPedido = produtosPorPedidoRep.findAll();
+		
 		List<AuxiliarPedidos> listPedidosReturn = new ArrayList<>();
 		Map<Long, List<Long>> mapProdutosPedidoByPedido = new HashMap<>();
 
 		try {
+			
+			Iterable<Pedidos> listaPedidos = pedidoRep.findAll();
+			Iterable<ProdutosPedido> listaProdutosPorPedidoByIdPedido = produtosPorPedidoRep.findAll();
 			
 			for (Pedidos pedido : listaPedidos) {
 				List<Long> produtosDoPedido = new ArrayList<Long>();
