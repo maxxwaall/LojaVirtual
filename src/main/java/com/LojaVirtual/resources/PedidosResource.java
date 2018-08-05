@@ -104,7 +104,7 @@ public class PedidosResource {
 	public Pedidos inserirPedidos(@RequestBody @Valid AuxiliarPedidos auxPedidos) {
 		
 		Pedidos pedidos ;
-		Iterable<ProdutosPedido> listProdutosPedido = new ArrayList<ProdutosPedido>();
+		List<ProdutosPedido> listProdutosPedido = new ArrayList<ProdutosPedido>();
 		Iterable<Produtos> listProdutosByCodigo = new ArrayList<Produtos>();
 		try {
 						
@@ -118,7 +118,7 @@ public class PedidosResource {
 			for (Produtos produto : listProdutosByCodigo) {
 				
 				ProdutosPedido produtosPorPedido = new ProdutosPedido(pedidos, produto, "PEDIDO - PRODUTO (" + produto.getCodigo() + ")");
-				((ArrayList<ProdutosPedido>) listProdutosPedido).add(produtosPorPedido);
+			    listProdutosPedido.add(produtosPorPedido);
 
 			}
 			
