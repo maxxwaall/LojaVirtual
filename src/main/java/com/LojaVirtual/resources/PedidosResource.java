@@ -1,8 +1,10 @@
 package com.LojaVirtual.resources;
 
+
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -53,9 +55,37 @@ public class PedidosResource {
 
 	//Método GET para retornar todos os pedidos cadastrados no banco de dados.
 	@GetMapping(produces = "application/json")
-	public @ResponseBody Iterable<Pedidos> getPedidos() {
+	public @ResponseBody List<AuxiliarPedidos> getPedidos() {
 		Iterable<Pedidos> listaPedidos = pedidoRep.findAll();
-		return listaPedidos;
+		Iterable<ProdutosPedido> listaProdutosPorPedidoByIdPedido = produtosPorPedidoRep.findAll();
+		List<AuxiliarPedidos> listPedidosReturn = new ArrayList<>();
+		Map<Long, List<Long>> mapProdutosPedidoByPedido = new HashMap<>();
+
+		try {
+			
+			for (Pedidos pedido : listaPedidos) {
+				List<Long> produtosDoPedido = new ArrayList<Long>();
+				for (ProdutosPedido prodPedido : listaProdutosPorPedidoByIdPedido) {
+					if (pedido.getCodigo() == prodPedido.getPedido().getCodigo()) {
+						produtosDoPedido.add(prodPedido.getProduto().getCodigo());
+					}
+				}
+				mapProdutosPedidoByPedido.put(pedido.getCodigo(), produtosDoPedido);
+			}
+
+			for (Pedidos pedido : listaPedidos) {
+				AuxiliarPedidos auxPedido = new AuxiliarPedidos(pedido.getEnderecoEntrega(),
+																pedido.getCliente().getCodigo(), 
+																mapProdutosPedidoByPedido.get(pedido.getCodigo()),
+																pedido.getValorTotalPedido());
+				listPedidosReturn.add(auxPedido);
+			}
+			
+		} catch (Exception ex) {
+			throw ex;
+		}
+
+		return listPedidosReturn;
 	}
 
 	/*Metodo POST para cadastrar os pedidos recebidos da API no banco de dados.
