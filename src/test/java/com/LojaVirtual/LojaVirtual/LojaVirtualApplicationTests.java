@@ -71,7 +71,7 @@ public class LojaVirtualApplicationTests {
     //Método de teste criado para testar o método POST da Api.
 	@Test
     public void testPost() throws JsonProcessingException{
- 
+		System.out.println("testPost");
     	List<Long> codigoProd = new ArrayList<Long>(1);
 
 		AuxiliarPedidos auxiliar = new AuxiliarPedidos("RUA", 1, codigoProd, 12.00);
